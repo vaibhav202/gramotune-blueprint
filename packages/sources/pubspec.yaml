@@ -1,0 +1,17 @@
+name: sources
+description: Gramotune source providers. Local files now; the YouTube source arrives after v1.0.
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  engine_api:
+    path: ../engine_api
+  music_library:
+    path: ../music_library
+
+dev_dependencies:
+  test: ^1.25.0

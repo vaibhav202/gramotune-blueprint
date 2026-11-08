@@ -1,0 +1,11 @@
+name: engine_api
+description: "Engine contract for Gramotune: commands, events, PlayItem and backend interfaces. Pure Dart."
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  meta: ^1.16.0

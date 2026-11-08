@@ -1,0 +1,23 @@
+name: gramotune_workspace
+description: Gramotune workspace root. Android local music player, Flutter and Dart only.
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+# Dart pub workspace (D-014). Every member declares `resolution: workspace`.
+# Keep this list in sync with ARCHITECTURE.md §3.
+workspace:
+  - app
+  - packages/engine_api
+  - packages/engine
+  - packages/music_library
+  - packages/sources
+  - packages/platform_android
+  - packages/skin
+  - packages/ui_kit
+
+dev_dependencies:
+  flutter_lints: 6.0.0
+  test: ^1.25.0

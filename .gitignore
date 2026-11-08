@@ -1,0 +1,38 @@
+# Dart and Flutter
+.dart_tool/
+.packages
+build/
+**/build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec_overrides.yaml
+
+# Android host project
+**/android/local.properties
+**/android/.gradle/
+**/android/captures/
+**/android/key.properties
+
+# IDE and OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Agent local state (sessions, caches, scratch). Instructions such as
+# AGENTS.md / CLAUDE.md / GEMINI.md are tracked; only state dirs are ignored.
+.opencode/
+.claude/
+.cursor/
+.aider*
+.gemini/
+.junie/
+.windsurf/
+.codeium/
+.serena/
+.continue/
+.copilot/
+
+# Tool output
+/tmp/
+*.log
