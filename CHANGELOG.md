@@ -22,6 +22,25 @@ Rules: evidence is pasted, not described. Never write "sounds good" or "looks sm
 
 ---
 
+
+
+### 2026-11-12 — M0.4 — CI live: check on every push, emulator job nightly, APK artifact
+- Agent: Big Pickle (opencode) · Session: this conversation · Commit or branch: master, pushed to origin
+- Status: ✅ done
+- Changed:
+  - `.github/workflows/ci.yml` (new): `check` job runs `tool/check.sh` on every push and pull request (Flutter pinned 3.47.9, temurin 17, gawk installed for the manifest guard's `strtonum`), then builds the play debug APK and uploads it as the `gramotune-play-debug-apk` artifact. `emulator-nightly` job runs the stub integration test on a GitHub-hosted emulator (API 34, `swiftshader_indirect`) on a 03:00 UTC cron and on demand.
+  - `README.md`: rewritten to speak about the product on its own terms (owner request: no references to other players or design eras; the look is described as inspired by classic audio hardware). D-001 line updated to decided.
+  - Temporary `probe.yml` workflow added and removed again while diagnosing; it is not in the final tree.
+- Evidence:
+  - **Green run linked (the M0.4 done-criterion):** https://github.com/vaibhav202/gramotune-blueprint/actions/runs/43105066311 — both jobs green: `check` (tool/check.sh, ~12 min) and `emulator-nightly` (12m29s). The artifact `gramotune-play-debug-apk` (76.9 MB) uploads on every run; first green run (check only): https://github.com/vaibhav202/gramotune-blueprint/actions/runs/43099142442.
+  - The stub integration test ran **on the emulator**: log line `✅ placeholder renders with the active flavor`.
+  - The runner GPU stack avoids the owner-host `libgfxstream_backend.so` emulator crash entirely — the guest rendered frames all through the 12-minute run without a crash. GitHub-hosted Ubuntu runners expose no `/dev/kvm`, so the emulator boots without hardware acceleration (~7 min boot); accepted for a nightly.
+  - GitHub Actions had a major outage 20:48–20:58 UTC on 2026-11-11 while the first push landed (runs queued with zero jobs); the queued runs completed by themselves once the incident ended. No project change was needed.
+- Decisions: none.
+- Spec changes: MILESTONES M0.4 + **Now** (next: M0.5); README status. No ADR.
+- Open questions for the owner: none.
+- Next item: M0.5 (synthetic fixtures)
+
 ### 2026-11-08 — D-001 — the project is named Gramotune; application id `app.gramotune`
 - Agent: Big Pickle (opencode) · Session: this conversation · Commit or branch: repository initialized today; no commits yet
 - Status: ✅ done

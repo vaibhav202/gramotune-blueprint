@@ -2,7 +2,7 @@
 
 An offline-first Android music player for people who own their music files. It has a classic library-style interface — lenses, a real playback queue and instant search — a look inspired by classic audio hardware, and an audio engine written entirely in Flutter and Dart. Later tracks add direct hardware output (USB bit-perfect, then root for the internal jack) and an optional YouTube Music source that shares one library with your downloads.
 
-**Status:** blueprint v0.1, written 2026-10-31. M0.1 (toolchain), M0.2 (workspace, packages, tool scripts) and M0.3 (Android baseline, merged-manifest guard) are complete. The next task is **M0.4** (CI; needs the repository) in `MILESTONES.md`.
+**Status:** blueprint v0.1, written 2026-10-31. M0.1–M0.4 (toolchain, workspace, Android baseline + manifest guard, CI) are complete; CI runs `tool/check.sh` on every push and an emulator job nightly — [latest green run](https://github.com/vaibhav202/gramotune-blueprint/actions). The next task is **M0.5** (synthetic fixtures) in `MILESTONES.md`.
 
 ## Read in this order
 

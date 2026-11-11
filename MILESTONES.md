@@ -5,8 +5,8 @@ Live document. The first unchecked item is the next task (AGENTS.md §2). Update
 ## Now
 
 - Phase: **M0 — foundation**
-- Next item: **M0.4**
-- Blocked on owner: **GitHub authentication for the push** (the `gh` credential helper is missing and the cached token is expired) and then the CI run link for M0.4.
+- Next item: **M0.5** (synthetic fixtures)
+- Blocked on owner: nothing for M0.5. The POCO M3 is reachable over `adb` when needed; the CI repository is `https://github.com/vaibhav202/gramotune-blueprint` (Actions green).
 - Human checks pending: none (format: `item → docs/human-checks/<file>.md`)
 
 ## Legend and rules
@@ -38,10 +38,13 @@ Live document. The first unchecked item is the next task (AGENTS.md §2). Update
   - Status: `minSdk` 26 and `targetSdk` 36 (Play requirement re-checked 2026-11-08) are explicit in `build.gradle.kts`; the exact 05 §3 permission list with `maxSdkVersion=32` and the predictive-back flag are in the main manifest; `tool/check_manifest.sh` checks the merged release manifest via aapt2 and `--self-test` proves failure when a permission is added.
   - Note (2026-11-08): edge-to-edge needs **no** manifest flag on Flutter 3.47 — the engine sizes the window without decor fitting and forces it (`WindowCompat.setDecorFitsSystemWindows(window, false)`) when Dart requests EDGE_TO_EDGE; on API 35+ it is OS-enforced for `targetSdk 35+`. The manifest flag from the Do list is the predictive-back `android:enableOnBackInvokedCallback="true"`.
   - Note: the manifest merger injects `app.gramotune.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (androidx.core dynamic receivers); `tool/check_manifest.sh` allow-lists exactly that name suffix.
-- [ ] ⬜ **M0.4 — CI** · S · 08 §1
+- [x] ✅ **M0.4 — CI** · S · 08 §1
   - Do: GitHub Actions running `tool/check.sh` on push and pull request; a nightly emulator job running a stub integration test; debug APK as an artifact.
   - Done when: a green run is linked in the CHANGELOG. Needs the repository (owner input).
-  - Note (2026-11-08): the emulator crashes on the owner's host inside `libgfxstream_backend.so` (see `docs/dev-environment.md`, section 4), so the nightly emulator job must run on a runner with a different GPU/driver stack, or pin an older emulator build. Budget one session for this when the repository exists.
+  - Status: `.github/workflows/ci.yml` has a `check` job (tool/check.sh + play debug APK artifact; Flutter 3.47.9, temurin 17, gawk) on every push/PR and an `emulator-nightly` job (API 34, swiftshader, stub integration test) on a daily 03:00 UTC cron and on demand. Green run: https://github.com/vaibhav202/gramotune-blueprint/actions/runs/43105066311 (check 12 min, emulator job 12.5 min).
+  - Note (2026-11-11): GitHub had a major Actions outage when the first push landed (runs queued with zero jobs for ~30 min); the runs started by themselves once the incident was over.
+  - Note: GitHub-hosted Ubuntu runners do **not** expose `/dev/kvm`, so the emulator runs without hardware acceleration (boot ≈ 7 min) — accepted for a nightly job. The runner GPU stack avoids the owner-host `libgfxstream_backend.so` crash entirely (`docs/dev-environment.md`, section 4).
+  - Note: `reactivecircus/android-emulator-runner@v2` executes each `script:` line in its own shell (`parseScript` → `sh -c` per line): `cd app` does not persist and a trailing line-continuation backslash becomes a literal argument that makes `flutter test` glob the whole repository (mixed integration and unit tests). Use the action's `working-directory` input and one-line commands.
 - [ ] ⬜ **M0.5 — Synthetic fixtures** · M · 08 §2
   - Do: `tool/gen_fixtures.sh` and `test_assets/manifest.json` per 08 §2, including the continuous-sine gapless pairs and the weird-files set. **[verify]** which tool writes `iTunSMPB`; if none does, the generator writes the atom itself.
   - Done when: fixtures are committed (under ~5 MB); a test checks that every manifest entry matches its file; the README explains regeneration.
