@@ -1,9 +1,0 @@
-# Probe: is a GitHub-hosted runner picking up jobs at all?
-name: probe
-on:
-  workflow_dispatch:
-jobs:
-  hello:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "runner ok: $(uname -a)"
