@@ -6,7 +6,7 @@ Live document. The first unchecked item is the next task (AGENTS.md §2). Update
 
 - Phase: **M0 — foundation**
 - Next item: **M0.4**
-- Blocked on owner: **M0.4 needs the GitHub repository** (owner input; AGENTS §10 "needs owner input for repository creation").
+- Blocked on owner: **GitHub authentication for the push** (the `gh` credential helper is missing and the cached token is expired) and then the CI run link for M0.4.
 - Human checks pending: none (format: `item → docs/human-checks/<file>.md`)
 
 ## Legend and rules

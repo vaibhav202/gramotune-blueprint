@@ -1,6 +1,6 @@
 # Gramotune — project blueprint
 
-An offline Android music player for people who own their music: iOS-6-era looks, an Audacious- and Fooyin-style library (lenses, a real queue, instant search), and an honest audio engine written entirely in Flutter and Dart. Later tracks add direct hardware output (USB bit-perfect, then root for the internal jack) and an optional YouTube Music source that shares one library with your downloads.
+An offline-first Android music player for people who own their music files. It has a classic library-style interface — lenses, a real playback queue and instant search — a look inspired by classic audio hardware, and an audio engine written entirely in Flutter and Dart. Later tracks add direct hardware output (USB bit-perfect, then root for the internal jack) and an optional YouTube Music source that shares one library with your downloads.
 
 **Status:** blueprint v0.1, written 2026-10-31. M0.1 (toolchain), M0.2 (workspace, packages, tool scripts) and M0.3 (Android baseline, merged-manifest guard) are complete. The next task is **M0.4** (CI; needs the repository) in `MILESTONES.md`.
 
@@ -14,7 +14,7 @@ An offline Android music player for people who own their music: iOS-6-era looks,
 | `DECISIONS.md` | ADRs D-001…D-025 with status. **Live.** |
 | `ARCHITECTURE.md` | Packages, isolates, data flow, dependencies |
 | `docs/01-product-spec.md` | Requirements P-01…P-23, quality targets Q-1…Q-8, non-goals |
-| `docs/02-ux-spec.md` | What was borrowed from Fooyin and Audacious, information architecture, screens U-01…U-20 |
+| `docs/02-ux-spec.md` | Information architecture, the interaction model and screens U-01…U-20 |
 | `docs/03-engine-spec.md` | Dart audio engine: API, pump loop, decoding, gapless, DSP, errors |
 | `docs/04-library-spec.md` | Database, scanner, queries, search, playlists |
 | `docs/05-android-platform-spec.md` | Permissions, service, focus, intents, lifecycle |
@@ -59,11 +59,11 @@ Next sessions: `Continue with the next unchecked item.` After you test something
 
 ## What the owner decides
 
-- **D-001** name and application id; **D-016** license. Both block the release step (M4.6), and the earlier the better.
+- **D-016** license. It blocks the release step (M4.6). D-001 (name and application id) is decided: Gramotune, `app.gramotune`.
 - Whether the agent can reach the POCO M3 over `adb` (otherwise on-device steps become paste-back commands).
 - The inputs listed at the end of `MILESTONES.md` (Figma exports, a sample library, a borrowed phone on another ROM, root approval).
 - Approvals the rules require: native dependencies, copyleft licenses, new permissions, new features, anything in `android-module/` or the YouTube track.
 
 ## Ground rules in four lines
 
-Flutter and Dart only, engine included (D-002, D-003). No code copied from Fooyin or Audacious (D-024). Original artwork only, no Apple marks in names or strings. Nothing audible or visual counts as done until evidence or a recorded human check says so (D-025).
+Flutter and Dart only, engine included (D-002, D-003). All code and artwork are original; no third-party player's code is copied, and its marks stay out of the name, package id and user-visible strings (D-024). Nothing audible or visual counts as done until evidence or a recorded human check says so (D-025).

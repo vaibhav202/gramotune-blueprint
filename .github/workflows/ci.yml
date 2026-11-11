@@ -1,0 +1,98 @@
+# CI for Gramotune (docs/08-testing-spec.md §1, MILESTONES M0.4).
+#
+#  - `check` runs tool/check.sh (analyze, format, boundaries, tokens, manifest
+#    fixtures, docs cross-references, all host tests) on every push and pull
+#    request, then uploads the play-flavor debug APK as an artifact.
+#  - `emulator-nightly` runs the stub integration test on a GitHub-hosted
+#    emulator. It runs nightly and can also be started by hand. It runs on the
+#    runner's GPU/driver stack, which avoids the owner-host emulator crash
+#    documented in docs/dev-environment.md §4.
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # 03:00 UTC every day.
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.47.9" # ARCHITECTURE.md §12; no upgrade before M4.7
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # tool/check_manifest.sh uses gawk's strtonum(); the runner default is mawk.
+      - name: Install gawk
+        run: sudo apt-get update -q && sudo apt-get install -y -q gawk
+
+      - name: tool/check.sh
+        run: tool/check.sh
+
+      - name: Build play debug APK
+        run: cd app && flutter build apk --debug --flavor play
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gramotune-play-debug-apk
+          path: app/build/app/outputs/flutter-apk/app-play-debug.apk
+          if-no-files-found: error
+
+  emulator-nightly:
+    # Nightly and manual only; the stub integration test does not need to gate
+    # every push (docs/08-testing-spec.md §1: nightly and milestone branches).
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Run stub integration test on the emulator (API 34)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          profile: pixel_5
+          emulator-options: >-
+            -no-window
+            -gpu swiftshader_indirect
+            -noaudio
+            -no-boot-anim
+            -camera-back none
+          disable-animations: true
+          script: |
+            cd app
+            flutter test integration_test --flavor play \
+              --dart-define=EXPECTED_FLAVOR=play
