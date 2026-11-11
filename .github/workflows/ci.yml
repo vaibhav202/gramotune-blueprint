@@ -94,5 +94,8 @@ jobs:
           disable-animations: true
           script: |
             cd app
-            flutter test integration_test --flavor play \
+            # Without -d, `flutter test integration_test` falls back to host
+            # mode and also picks up app/test (unit tests), which Flutter
+            # refuses; the emulator-runner always uses emulator-5554.
+            flutter test integration_test -d emulator-5554 --flavor play \
               --dart-define=EXPECTED_FLAVOR=play
