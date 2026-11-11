@@ -85,6 +85,11 @@ jobs:
           api-level: 34
           arch: x86_64
           profile: pixel_5
+          # The action splits `script` into per-line shells, so `cd app` would
+          # not persist and a trailing backslash becomes a literal argument
+          # (which makes flutter glob the whole repository). Use the action's
+          # working-directory instead and keep the command on one line.
+          working-directory: app
           emulator-options: >-
             -no-window
             -gpu swiftshader_indirect
@@ -92,10 +97,4 @@ jobs:
             -no-boot-anim
             -camera-back none
           disable-animations: true
-          script: |
-            cd app
-            # Without -d, `flutter test integration_test` falls back to host
-            # mode and also picks up app/test (unit tests), which Flutter
-            # refuses; the emulator-runner always uses emulator-5554.
-            flutter test integration_test -d emulator-5554 --flavor play \
-              --dart-define=EXPECTED_FLAVOR=play
+          script: flutter test integration_test -d emulator-5554 --flavor play --dart-define=EXPECTED_FLAVOR=play
